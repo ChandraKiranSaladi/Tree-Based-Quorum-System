@@ -1,0 +1,11 @@
+# Nodes
+12
+# UID    Hostname    Port
+   1     localhost   3224
+   2     localhost   3225
+   3     localhost   3226
+   4     localhost   3227
+   5     localhost   3228   
+   6     localhost   3229
+   7     localhost   3230
+   
