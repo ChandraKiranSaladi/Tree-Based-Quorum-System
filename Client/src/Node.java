@@ -2,10 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.Map;
 import java.io.IOException;
 import java.net.*;
 import java.text.SimpleDateFormat;
@@ -16,7 +13,7 @@ public class Node {
 	String HostName;
 	HashMap<Integer, NeighbourNode> uIDofNeighbors;
 	ServerSocket serverSocket;
-	HashMap<Integer,TCPClient> connectedClients = (HashMap<Integer, TCPClient>) Collections.synchronizedMap(new HashMap<Integer,TCPClient>());
+	Map<Integer,TCPClient> connectedClients = (Map<Integer, TCPClient>) Collections.synchronizedMap(new HashMap<Integer,TCPClient>());
 	HashMap<Integer,ArrayList<Integer>> quorums = new HashMap<>();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	int messageGrantCount, sentMessageCount, receivedMessageCount;
@@ -37,13 +34,15 @@ public class Node {
 
 	public void sendMessageToQuorum(int quorumNumber, MessageType msgType, int csEntryCount) {
 		synchronized (connectedClients) {
-			csStart = new Date();
 			ArrayList<Integer> quorum = quorums.get(quorumNumber);
 			for(int x : quorum) {
 				TCPClient client = connectedClients.get(x);
 				try {
-					System.out.println("Sending Request to: "+x);
-					client.getOutputWriter().writeObject(new Message(this.UID,msgType));
+					if(msgType == MessageType.Request)
+						System.out.println("Sending Request to: "+x);
+					else 
+						System.out.println("Sending Release to: "+x);
+					client.getOutputWriter().writeObject(new Message(csStart, this.UID, msgType ));
 					//						System.out.println("Connection Closed for UID:"+getsenderUID);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -94,7 +93,7 @@ public class Node {
 	}
 
 
-	public 	HashMap<Integer,TCPClient> getAllConnectedClients() {
+	public 	Map<Integer,TCPClient> getAllConnectedClients() {
 		return this.connectedClients;
 	}
 
@@ -127,8 +126,15 @@ public class Node {
 
 	public void waitforGrantFromQuorum(int quorumNumber) {
 		int numberOfGrants = this.quorums.get(quorumNumber).size();
-
-		while(numberOfGrants != this.messageGrantCount);
+		System.out.println("Waiting For Grant");
+		while(numberOfGrants != this.messageGrantCount) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void printReport() {
@@ -136,7 +142,10 @@ public class Node {
 		System.out.println("Total Received Messages: "+receivedMessageCount);
 		
 		for(int i = 0; i < 20; i++) {
-			System.out.println(" Total messages Exchanged: ");
+			System.out.println(" Total messages Exchanged for CS["+i+"]: " + messageCountCS[i]);
+		}
+		for(int i = 0; i < 20; i++) {
+			System.out.println(" Latency for CS["+i+"]: " + latency[i]);
 		}
 	}
 

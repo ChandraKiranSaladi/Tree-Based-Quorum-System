@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.Scanner;
 
 public class InvokeMain {
 	public static void main(String[] args) {
@@ -34,11 +31,10 @@ public class InvokeMain {
 
 			System.out.println("Server started and listening to client requests.........");
 
-			Thread.sleep(10000);
+			Thread.sleep(5000);
 
 			new FileRequestHandler(dsNode).listen();;
 		}catch(Exception e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
@@ -48,9 +44,9 @@ public class InvokeMain {
 		Node dsNode = new Node();
 		try {
 			dsNode = ParseConfigFile.read(
-					"C:\\Users\\ehaacls\\OneDrive - The University of Texas at Dallas\\"
+					"C:\\Users\\kiran\\OneDrive - The University of Texas at Dallas\\"
 					+ "CS 6378 ( Advanced Operating Systems )\\Projects\\"
-					+ "Ricart Agrawala Mutex\\src\\readFile.txt",
+					+ "Tree Based Quorum\\Server\\src\\readFile.txt",
 							InetAddress.getLocalHost().getHostName(), hostNumIndex);
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get nodeList", e);

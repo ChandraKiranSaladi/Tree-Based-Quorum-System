@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 public class TCPClient extends Thread{
 
@@ -124,7 +125,7 @@ public class TCPClient extends Thread{
 				// add received messages to Blocking queue
 				this.dsNode.messageHandler(message);
 				
-				System.out.println("Msg rx UID: " + message.getsenderUID()+" "+message.getMsgType()+" tmp"+message.getTimeStamp()+" at:"+dsNode.getMyTimeStamp());
+				System.out.println("Msg rx UID: " + message.getsenderUID()+" "+message.getMsgType()+" tmp: "+message.getTimeStamp().getTime()+" at: "+new Date().getTime());
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("failed transmission");

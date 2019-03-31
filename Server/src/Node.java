@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.io.IOException;
@@ -54,8 +53,9 @@ public class Node {
 	synchronized public void addMessageToQueue(Message msg) {
 		//			setMyTimeStamp(Math.max(msg.timeStamp,getMyTimeStamp()));
 		incrementReceivedMessages();
-		if(msg.getMsgType() == MessageType.Release)
+		if(msg.getMsgType() == MessageType.Release) {
 			setLocked(false);
+		}
 		else
 			msgQueue.add(msg);
 	}
@@ -66,7 +66,7 @@ public class Node {
 				if(UID == client.getServerUID()) {
 					try {
 						System.out.println("Sending Grant to UID: "+ UID);
-						client.getOutputWriter().writeObject(new Message(this.UID,MessageType.Grant));
+						client.getOutputWriter().writeObject(new Message(new Date(), this.UID,MessageType.Grant));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -81,7 +81,7 @@ public class Node {
 			for(TCPClient client : connectedClients){
 				try {
 					System.out.println("Sending Completion to UID: "+ client.getServerUID());
-					client.getOutputWriter().writeObject(new Message(this.UID,MessageType.Completion));
+					client.getOutputWriter().writeObject(new Message(new Date(), this.UID,MessageType.Completion));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -108,6 +108,11 @@ public class Node {
 
 	synchronized public void setLocked(boolean status){
 		this.locked = status;
+		if(status == true)
+			System.out.println("Locked");
+		else
+			System.out.println("Unlocked");
+		
 	}
 	
 	public boolean isLocked() {

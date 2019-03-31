@@ -1,4 +1,3 @@
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
@@ -19,7 +18,7 @@ public class FileRequestAccess {
 		while (this.csEntryCount < 20) {
 
 			try {
-				Thread.sleep(new Random().nextInt(5000)+ 5000);
+				Thread.sleep(new Random().nextInt(500)+ 500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -38,9 +37,11 @@ public class FileRequestAccess {
 	}
 
 	public void Request_Resource() {
+		dsNode.messageGrantCount = 0;
 		dsNode.csStart = new Date();
 		dsNode.tempMessageCount = dsNode.sentMessageCount + dsNode.receivedMessageCount;
-		int quorumNumber = getRandomNumber(dsNode.quorums.size());
+		this.quorumNumber = getRandomNumber(dsNode.quorums.size());
+		System.out.println("Sending Request to Quorum: "+quorumNumber);
 		dsNode.sendMessageToQuorum(quorumNumber,MessageType.Request, this.csEntryCount);
 		dsNode.waitforGrantFromQuorum(quorumNumber);
 
@@ -48,12 +49,12 @@ public class FileRequestAccess {
 
 	synchronized private void CriticalSection() {
 		this.csEntryCount++;
-		dsNode.latency[this.csEntryCount] = new Date().getTime() - dsNode.csStart.getTime();
-		dsNode.messageCountCS[this.csEntryCount] = dsNode.sentMessageCount+ dsNode.receivedMessageCount - dsNode.tempMessageCount; 
+		dsNode.latency[this.csEntryCount-1] = new Date().getTime() - dsNode.csStart.getTime();
+		dsNode.messageCountCS[this.csEntryCount-1] = dsNode.sentMessageCount+ dsNode.receivedMessageCount - dsNode.tempMessageCount; 
 		System.out.println("IN Critical Section folks at:"+dsNode.getMyTimeStamp());
 		Write();
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(300);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -68,12 +69,12 @@ public class FileRequestAccess {
 
 	public void Write() {
 
-		BufferedWriter bufferedWriter;
+		FileWriter fileWriter;
 		try {
-			bufferedWriter = new BufferedWriter(new FileWriter(dsNode.filePath));
-			bufferedWriter.write("Entering " + " clientNumber: "+ (dsNode.UID)+ "timeStamp: "+ dsNode.getMyTimeStamp());
+			fileWriter = new FileWriter(dsNode.filePath+"\\log.txt",true);
+			fileWriter.write("Entering " + " UID: "+ (dsNode.UID)+ " timeStamp: "+ dsNode.getMyTimeStamp());
+			fileWriter.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

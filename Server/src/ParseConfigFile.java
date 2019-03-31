@@ -1,12 +1,9 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 
 class NeighbourNode {
 	String HostName;
@@ -19,7 +16,7 @@ class NeighbourNode {
 }
 
 class ParseConfigFile {
-	final static List<Node> nodeList = new ArrayList<>();
+	final static HashMap<Integer,Node> nodeList = new HashMap<>();
 
 	public static Node read(String Path, String hostName, int hostNumIndex) throws IOException {
 		System.out.println(hostNumIndex);
@@ -29,23 +26,21 @@ class ParseConfigFile {
 		// Filtering the File 
 		String entireFileinString = "";
 		while ((readLine = b.readLine()) != null) {
-			entireFileinString += readLine;
+			entireFileinString += readLine+"\n";
 		}
 		b.close();
-		entireFileinString.replaceAll("(?m)^#.*", "");
-		entireFileinString.replaceAll("(?m)^\\s+$","");
-		BufferedWriter writer = new BufferedWriter(new FileWriter(Path));
-		writer.write(entireFileinString);
-		writer.close();
+		entireFileinString = entireFileinString.replaceAll("(?m)^#.*", "");
+		entireFileinString = entireFileinString.replaceAll("(?m)^[ \t]*\r?\n","");
 
-
-		b = new BufferedReader(new FileReader(Path));
-		int nodeNumber = Integer.parseInt(b.readLine());
+		String[] line = entireFileinString.split("\n");
+		int no = 0;
+		// b = new BufferedReader(new FileReader(Path));
+		int nodeNumber = Integer.parseInt(line[no++]);
 		Node node = new Node();
 		int myUID = -1;
 
 			for (int xyz = 0; xyz < nodeNumber; xyz++) {
-				readLine = b.readLine().trim();
+				readLine = line[no++].trim();
 				String[] s = readLine.split("\\s+");
 				for(int i=0;i<s.length;i++)
 					System.out.println(i+":"+s[i]);
@@ -54,7 +49,7 @@ class ParseConfigFile {
 				int Port = Integer.parseInt(s[2]);
 				if (hostNumIndex == UID)
 					myUID = UID;
-				nodeList.add(new Node(UID, Port, Hostname, null));
+				nodeList.put(UID, new Node(UID, Port, Hostname, null));
 			}
 
 			node = nodeList.get(hostNumIndex);

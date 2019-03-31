@@ -1,9 +1,9 @@
 import java.io.Serializable;
+import java.util.Date;
 
-public class Message  implements Serializable{
-//	, Comparable<Message> 
+public class Message  implements Serializable, Comparable<Message>{ 
 	private static final long serialVersionUID = 1L;
-	private String timeStamp;
+	private Date timeStamp;
 	private int senderUID;
 	private MessageType msgtype;
 	
@@ -13,7 +13,7 @@ public class Message  implements Serializable{
 		this.msgtype = Msgtype;
 	}
 	
-	public Message(String timeStamp, int senderUID,MessageType messageType ) {
+	public Message(Date timeStamp, int senderUID,MessageType messageType ) {
 		this.timeStamp = timeStamp;
 		this.senderUID = senderUID;
 		this.msgtype = messageType;
@@ -27,7 +27,7 @@ public class Message  implements Serializable{
 //		this(message.timeStamp, message.senderUID, message.msgtype);
 //	}
 
-	public String getTimeStamp() {
+	public Date getTimeStamp() {
 		return this.timeStamp;
 	}
 	
@@ -39,8 +39,8 @@ public class Message  implements Serializable{
 		return this.msgtype;
 	}
 
-//	@Override
-//	public int compareTo(Message msg) {
-//		return 1;
-//	}
+	@Override
+	public int compareTo(Message msg) {
+		return 1;
+	}
 }

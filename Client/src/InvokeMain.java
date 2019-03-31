@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.Scanner;
 
 public class InvokeMain {
 	public static void main(String[] args) {
@@ -33,7 +30,7 @@ public class InvokeMain {
 
 			System.out.println("Server started and listening to client requests.........");
 
-			Thread.sleep(10000);
+			Thread.sleep(3000);
 
 			// Iterate through the node neighbors to send the Client Requests
 			dsNode.uIDofNeighbors.entrySet().forEach((neighbour) -> {
@@ -47,7 +44,7 @@ public class InvokeMain {
 						// it later. Listen Messages is an infinite loop to preserve the socket connection
 						client.listenSocket();
 						client.sendHandShakeMessage();
-						dsNode.addClient(dsNode.UID,client);
+						dsNode.addClient(neighbour.getKey(),client);
 						client.listenToMessages();
 					}
 				};
@@ -56,12 +53,11 @@ public class InvokeMain {
 			});
 
 			// Sleep so that all the Client connections are established		
-			Thread.sleep(5000);
-			new FileRequestAccess(dsNode);
+			Thread.sleep(3000);
+			new FileRequestAccess(dsNode).InitiateRequestGeneration();
 			dsNode.printReport();
 			
 		}catch(Exception e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -73,7 +69,7 @@ public class InvokeMain {
 			dsNode = ParseConfigFile.read(
 					"C:\\Users\\kiran\\OneDrive - The University of Texas at Dallas\\"
 					+ "CS 6378 ( Advanced Operating Systems )\\Projects\\"
-					+ "Tree Based Quorum\\Client\\src\readFile.txt",
+					+ "Tree Based Quorum\\Client\\src\\readFile.txt",
 							InetAddress.getLocalHost().getHostName(), hostNumIndex);
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get nodeList", e);

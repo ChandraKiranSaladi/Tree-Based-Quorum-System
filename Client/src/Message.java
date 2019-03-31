@@ -1,9 +1,10 @@
 import java.io.Serializable;
+import java.util.Date;
 
 public class Message  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private int timeStamp;
+	private Date timeStamp;
 	private int senderUID;
 	private MessageType msgtype;
 	
@@ -13,7 +14,7 @@ public class Message  implements Serializable{
 		this.msgtype = Msgtype;
 	}
 	
-	public Message(int timeStamp, int senderUID, MessageType messageType ) {
+	public Message(Date timeStamp, int senderUID, MessageType messageType ) {
 		this.timeStamp = timeStamp;
 		this.senderUID = senderUID;
 		this.msgtype = messageType;
@@ -27,7 +28,7 @@ public class Message  implements Serializable{
 //		this(message.timeStamp, message.senderUID, message.msgtype);
 //	}
 
-	public int getTimeStamp() {
+	public Date getTimeStamp() {
 		return this.timeStamp;
 	}
 	

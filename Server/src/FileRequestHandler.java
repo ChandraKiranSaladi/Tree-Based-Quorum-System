@@ -10,7 +10,6 @@ public class FileRequestHandler {
 		// Listen for Requests
 		while(true) {
 			if(dsNode.isLocked() == false && dsNode.msgQueue.size() != 0 ) {
-				String str = "";
 				Message msg = dsNode.getHeadMessageFromQueue();
 				if(msg.getMsgType() == MessageType.Request) {
 					dsNode.setLocked(true);
@@ -21,6 +20,12 @@ public class FileRequestHandler {
 					System.out.println("Total Received Messages: "+ dsNode.getReceivedMessagesCount());
 					break;
 				}
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
