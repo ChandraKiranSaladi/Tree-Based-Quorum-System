@@ -7,9 +7,9 @@ public class InvokeMain {
 			// build a node for each terminal
 
 			// logic for assigning nodes - temporary
-//			Scanner scanner = new Scanner(System.in);
-			
-//			int hostNumIndex = scanner.nextInt();
+			//			Scanner scanner = new Scanner(System.in);
+
+			//			int hostNumIndex = scanner.nextInt();
 			// Integer.parseInt(args[0]);
 			int hostNumIndex = Integer.parseInt(args[0]);;
 
@@ -31,13 +31,37 @@ public class InvokeMain {
 
 			System.out.println("Server started and listening to client requests.........");
 
-			Thread.sleep(5000);
+			Thread.sleep(3000);
+			if(dsNode.getNodeUID() == 1) {
+				// Iterate through the node neighbors to send the Client Requests
+				dsNode.uIDofNeighbors.entrySet().forEach((neighbour) -> {
+					Runnable clientRunnable = new Runnable() {
+						public void run() {
+							TCPClient client = new TCPClient(dsNode.UID,
+									neighbour.getValue().PortNumber, neighbour.getValue().HostName, dsNode.getNodeHostName(), neighbour.getKey(),
+									dsNode);
+							System.out.println("Client Connection sent from "+dsNode.UID+" to UID: "+neighbour.getKey()+" at Port: "+neighbour.getValue().PortNumber);
+							// The following function calls starts the Socket Connections, and adds the client to a list to access
+							// it later. Listen Messages is an infinite loop to preserve the socket connection
+							client.listenSocket();
+							client.sendHandShakeMessage();
+							dsNode.addClient(neighbour.getKey(),client);
+							client.listenToMessages();
+						}
+					};
+					Thread clientthread = new Thread(clientRunnable);
+					clientthread.start();
+				});
+			}
+			// Sleep so that all the Client connections are established		
+			Thread.sleep(3000);
 
-			new FileRequestHandler(dsNode).listen();;
+			new FileRequestHandler(dsNode).listen();
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	
+
 	}
 
 	public static Node BuildNode(int hostNumIndex) {
@@ -45,8 +69,8 @@ public class InvokeMain {
 		try {
 			dsNode = ParseConfigFile.read(
 					"C:\\Users\\kiran\\OneDrive - The University of Texas at Dallas\\"
-					+ "CS 6378 ( Advanced Operating Systems )\\Projects\\"
-					+ "Tree Based Quorum\\Server\\src\\readFile.txt",
+							+ "CS 6378 ( Advanced Operating Systems )\\Projects\\"
+							+ "Tree Based Quorum\\Server\\src\\readFile.txt",
 							InetAddress.getLocalHost().getHostName(), hostNumIndex);
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get nodeList", e);

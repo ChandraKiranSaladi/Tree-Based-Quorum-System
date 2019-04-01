@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 public class TCPClient extends Thread{
 
@@ -62,6 +63,10 @@ public class TCPClient extends Thread{
 					String[] msgArr = message.split("!");
 					// Client UID is the UID from which we received the request
 					this.serverUID = Integer.parseInt(msgArr[1]);
+					
+					// add all the connected clients
+					dsNode.addClient(this.serverUID,this);
+					
 					System.out.println("Text received from client: " + this.serverUID);
 				}
 
@@ -80,4 +85,52 @@ public class TCPClient extends Thread{
 		}
 	}
 	
+	// If using TCPClient as a Client Request Sender
+	public void listenSocket() {
+		// Create socket connection
+		try {
+			clientsocket = new Socket(serverHostName, serverPortNumber, InetAddress.getByName(clientHostName), 0);
+			out = new ObjectOutputStream(clientsocket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(clientsocket.getInputStream());
+			System.out.println("After inputStream, listenSocket");
+		} catch (UnknownHostException e) {
+			System.out.println("Unknown host:" + serverHostName);
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("No I/O" + e);
+			System.exit(1);
+		}
+	}
+
+	public void sendHandShakeMessage() {
+
+		try {
+			// Send text to server
+			System.out.println("Sending HandShake message to server " + this.serverUID + ".....");
+			String msg = "Hi!" + this.UID;
+			out.writeObject(msg);
+			out.flush();
+		} catch (IOException e) {
+			System.out.println("failed transmission" + e);
+			System.exit(1);
+		}
+	}
+
+	public void listenToMessages() {
+		try {
+			while (true) {
+				// listen for messages
+				Message message = (Message) in.readObject();
+				// add received messages to Blocking queue
+				this.dsNode.messageHandler(message);
+				
+				System.out.println("Msg rx UID: " + message.getsenderUID()+" "+message.getMsgType()+" tmp: "+message.getTimeStamp().getTime()+" at: "+new Date().getTime());
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("failed transmission");
+			System.exit(1);
+		}
+
+	}
 }

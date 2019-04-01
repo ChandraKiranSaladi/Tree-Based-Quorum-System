@@ -133,23 +133,4 @@ public class TCPClient extends Thread{
 		}
 
 	}
-	
-	public Message listenToServerReplies() {
-		// File Server Replies
-		flag = true;
-		Message message = null;
-		System.out.println("Started Listening to Server Reply");
-		try {
-			message = (Message) in.readObject();
-			System.out.println("ServerReply Received");
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-		flag = false;
-		return message;
-	}
-	
-	public boolean getFlag() {
-		return this.flag;
-	}
 }

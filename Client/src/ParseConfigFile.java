@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -38,7 +36,6 @@ class ParseConfigFile {
 
 		String[] line = entireFileinString.split("\n");
 		int no = 0;
-		// b = new BufferedReader(new FileReader(Path));		entireFileinString = entireFileinString.replaceAll("(?m)^[ \t]*\r?\n","");
 
 		b = new BufferedReader(new FileReader(Path));
 		path = line[no++];

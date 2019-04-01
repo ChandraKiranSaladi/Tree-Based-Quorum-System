@@ -1,7 +1,8 @@
 public class FileRequestHandler {
 
 	Node dsNode;
-
+	int completionMessageCount;
+	
 	public FileRequestHandler(Node node) {
 		this.dsNode = node;
 	}
@@ -15,16 +16,21 @@ public class FileRequestHandler {
 					dsNode.setLocked(true);
 					dsNode.sendGrant(msg.getsenderUID());
 				}
+				else if(dsNode.getNodeUID() == 1 && msg.getMsgType() == MessageType.Completion) {
+					if(5 == ++completionMessageCount) {
+						dsNode.sendCompletion();
+						dsNode.printReport();
+						break;
+					}
+				}
 				else if(msg.getMsgType() == MessageType.Completion) {
-					System.out.println("Total Sent Messages: "+ dsNode.getSentMessagesCount());
-					System.out.println("Total Received Messages: "+ dsNode.getReceivedMessagesCount());
+					dsNode.printReport();
 					break;
 				}
 			}
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

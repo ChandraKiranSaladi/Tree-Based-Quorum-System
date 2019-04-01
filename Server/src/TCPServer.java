@@ -34,9 +34,6 @@ public class TCPServer {
 				Socket clientreqSocket = serversocket.accept();
 				reqHandler = new TCPClient(clientreqSocket, this.dsNode);
 
-				// add all the connected clients
-				dsNode.addClient(reqHandler);
-
 				// assign each client request to a separate thread
 				Thread t = new Thread(reqHandler);
 				t.start();

@@ -29,7 +29,7 @@ public class FileRequestAccess {
 
 
 		}
-//		dsNode.sendCompletion();
+		dsNode.sendCompletion();
 	}
 
 	private int getRandomNumber(int number) {
@@ -72,7 +72,7 @@ public class FileRequestAccess {
 		FileWriter fileWriter;
 		try {
 			fileWriter = new FileWriter(dsNode.filePath+"\\log.txt",true);
-			fileWriter.write("Entering " + " UID: "+ (dsNode.UID)+ " timeStamp: "+ dsNode.getMyTimeStamp());
+			fileWriter.write("Entering " + " UID: "+ (dsNode.UID)+ " timeStamp: "+ dsNode.getMyTimeStamp()+"\n");
 			fileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();

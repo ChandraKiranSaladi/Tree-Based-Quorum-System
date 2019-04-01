@@ -1,8 +1,8 @@
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class Node {
 	String HostName;
 	HashMap<Integer, NeighbourNode> uIDofNeighbors;
 	ServerSocket serverSocket;
-	List<TCPClient> connectedClients = Collections.synchronizedList(new ArrayList<TCPClient>());
+	Map<Integer,TCPClient> connectedClients = (Map<Integer, TCPClient>) Collections.synchronizedMap(new HashMap<Integer,TCPClient>());
 	BlockingQueue<Message> msgQueue;
 	int sentMessageCount;
 	int receivedMessageCount;
@@ -62,8 +62,7 @@ public class Node {
 
 	public void sendGrant(int UID) {
 		synchronized (connectedClients) {
-			for(TCPClient client : connectedClients){
-				if(UID == client.getServerUID()) {
+			TCPClient client = connectedClients.get(UID);
 					try {
 						System.out.println("Sending Grant to UID: "+ UID);
 						client.getOutputWriter().writeObject(new Message(new Date(), this.UID,MessageType.Grant));
@@ -71,14 +70,13 @@ public class Node {
 						e.printStackTrace();
 					}
 				}
-			}
 			incrementSentMessages();
 		}
-	}
 
 	public void sendCompletion() {
 		synchronized (connectedClients) {
-			for(TCPClient client : connectedClients){
+			for(Entry<Integer, TCPClient> tmp: connectedClients.entrySet()){
+				TCPClient client = tmp.getValue();
 				try {
 					System.out.println("Sending Completion to UID: "+ client.getServerUID());
 					client.getOutputWriter().writeObject(new Message(new Date(), this.UID,MessageType.Completion));
@@ -123,14 +121,17 @@ public class Node {
 		return this.uIDofNeighbors;
 	}
 
-	public void addClient(TCPClient client) {
+	public void addClient(int UID, TCPClient client) {
 		synchronized (connectedClients) {
-			connectedClients.add(client);
+			connectedClients.put(UID, client);
 		}
 	}
 
+	synchronized public void messageHandler(Message msg) {
+		incrementReceivedMessages();
+	}
 
-	public List<TCPClient> getAllConnectedClients() {
+	public 	Map<Integer,TCPClient> getAllConnectedClients() {
 		return this.connectedClients;
 	}
 
@@ -142,11 +143,9 @@ public class Node {
 		this.receivedMessageCount++;
 	}
 	
-	public int getSentMessagesCount() {
-		return this.sentMessageCount; 
-	}
-	
-	public int getReceivedMessagesCount() {
-		return this.receivedMessageCount; 
+	public void printReport() {
+		System.out.println("Total Sent Messages: "+sentMessageCount);
+		System.out.println("Total Received Messages: "+receivedMessageCount);
+		
 	}
 }

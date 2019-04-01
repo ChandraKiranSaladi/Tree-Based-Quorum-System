@@ -58,7 +58,7 @@ public class Node {
 			TCPClient client = connectedClients.get(1);
 			try {
 				System.out.println("Sending Completion to: 1");
-				client.getOutputWriter().writeObject(new Message(this.UID,MessageType.Completion));
+				client.getOutputWriter().writeObject(new Message(new Date(),this.UID,MessageType.Completion));
 				//						System.out.println("Connection Closed for UID:"+getsenderUID);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -101,6 +101,9 @@ public class Node {
 		incrementReceivedMessageCount();
 		if(msg.getMsgType() == MessageType.Grant) {
 			incrementGrantMessageCount();
+		}
+		if(msg.getMsgType() == MessageType.Completion) {
+			printReport();
 		}
 	}
 

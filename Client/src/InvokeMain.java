@@ -55,7 +55,6 @@ public class InvokeMain {
 			// Sleep so that all the Client connections are established		
 			Thread.sleep(3000);
 			new FileRequestAccess(dsNode).InitiateRequestGeneration();
-			dsNode.printReport();
 			
 		}catch(Exception e){
 			e.printStackTrace();
