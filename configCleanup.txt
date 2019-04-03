@@ -1,0 +1,16 @@
+# Number of nodes in the System
+12
+
+# Node#    Hostname          Port#
+   1     dc01.utdallas.edu   3224
+   2     dc02.utdallas.edu   3225
+   3     dc03.utdallas.edu   3226
+   4     dc04.utdallas.edu   3227
+   5     dc05.utdallas.edu   3228   
+   6     dc06.utdallas.edu   3229
+   7     dc07.utdallas.edu   3230
+   11    dc08.utdallas.edu   3231
+   12    dc09.utdallas.edu   3232
+   13    dc10.utdallas.edu   3233   
+   14    dc11.utdallas.edu   3234
+   15    dc12.utdallas.edu   3235

@@ -15,10 +15,10 @@ class NeighbourNode {
 }
 
 class ParseConfigFile {
-	final static HashMap<Integer,Node> nodeList = new HashMap<>();
+	final static HashMap<String,Node> nodeList = new HashMap<>();
 
-	public static Node read(String Path, String hostName, int hostNumIndex) throws IOException {
-		System.out.println(hostNumIndex);
+	public static Node read(String Path, String hostName) throws IOException {
+		System.out.println(hostName);
 		HashMap<Integer, NeighbourNode> map = new HashMap<>();
 		HashMap<Integer, NeighbourNode> UIDofNeighbors = new HashMap<Integer, NeighbourNode>();
 		BufferedReader b = new BufferedReader(new FileReader(Path));
@@ -53,12 +53,12 @@ class ParseConfigFile {
 				String Hostname = s[1];
 				int Port = Integer.parseInt(s[2]);
 				map.put(UID, new NeighbourNode(Hostname, Port));
-				if (hostNumIndex == UID)
+				if (hostName.equals(Hostname))
 					myUID = UID;
-				nodeList.put(UID,new Node(UID, Port, Hostname, null));
+				nodeList.put(Hostname,new Node(UID, Port, Hostname, UIDofNeighbors));
 			}
 
-			node = nodeList.get(hostNumIndex);
+			node = nodeList.get(hostName);
 			int quorumNumbers = Integer.parseInt(line[no++]);
 
 			for( int xyz = 0 ; xyz < quorumNumbers; xyz++ ) {
@@ -82,7 +82,7 @@ class ParseConfigFile {
 			}
 			
 			node.uIDofNeighbors = UIDofNeighbors;
-			File folder = new File(path+"\\AOSProject2");
+			File folder = new File(path+"/Output");
 			if(folder.exists() && folder.isDirectory()) {
 				for(File f : folder.listFiles())
 					if(!f.isDirectory())

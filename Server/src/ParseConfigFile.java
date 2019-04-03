@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -16,10 +14,10 @@ class NeighbourNode {
 }
 
 class ParseConfigFile {
-	final static HashMap<Integer,Node> nodeList = new HashMap<>();
+	final static HashMap<String,Node> nodeList = new HashMap<>();
 
-	public static Node read(String Path, String hostName, int hostNumIndex) throws IOException {
-		System.out.println(hostNumIndex);
+	public static Node read(String Path, String hostName) throws IOException {
+		System.out.println(hostName);
 		BufferedReader b = new BufferedReader(new FileReader(Path));
 		HashMap<Integer, NeighbourNode> map = new HashMap<>();
 		HashMap<Integer, NeighbourNode> UIDofNeighbors = new HashMap<Integer, NeighbourNode>();
@@ -50,12 +48,12 @@ class ParseConfigFile {
 			String Hostname = s[1];
 			int Port = Integer.parseInt(s[2]);
 			map.put(UID, new NeighbourNode(Hostname, Port));
-			if (hostNumIndex == UID)
+			if (hostName.equals(Hostname))
 				myUID = UID;
-			nodeList.put(UID, new Node(UID, Port, Hostname, null));
+			nodeList.put(Hostname,new Node(UID, Port, Hostname, UIDofNeighbors));
 		}
 
-		node = nodeList.get(hostNumIndex);
+		node = nodeList.get(hostName);
 
 		int noofClientConnections = Integer.parseInt(line[no++]);
 

@@ -1,0 +1,10 @@
+# Number of nodes in the Client
+5
+
+# Node#    Hostname          Port#
+   11    dc08.utdallas.edu   3231
+   12    dc09.utdallas.edu   3232
+   13    dc10.utdallas.edu   3233   
+   14    dc11.utdallas.edu   3234
+   15    dc12.utdallas.edu   3235
+

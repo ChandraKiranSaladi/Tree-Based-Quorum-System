@@ -71,7 +71,7 @@ public class FileRequestAccess {
 
 		FileWriter fileWriter;
 		try {
-			fileWriter = new FileWriter(dsNode.filePath+"\\log.txt",true);
+			fileWriter = new FileWriter(dsNode.filePath+"/log.txt",true);
 			fileWriter.write("Entering " + " UID: "+ (dsNode.UID)+ " timeStamp: "+ dsNode.getMyTimeStamp()+"\n");
 			fileWriter.close();
 		} catch (IOException e) {

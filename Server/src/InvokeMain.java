@@ -1,19 +1,19 @@
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class InvokeMain {
 	public static void main(String[] args) {
 		try {
 
 			// build a node for each terminal
+			String clientHostName = "";
+			try {
+					clientHostName = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+			}
 
-			// logic for assigning nodes - temporary
-			//			Scanner scanner = new Scanner(System.in);
-
-			//			int hostNumIndex = scanner.nextInt();
-			// Integer.parseInt(args[0]);
-			int hostNumIndex = Integer.parseInt(args[0]);;
-
-			Node dsNode = BuildNode(hostNumIndex);
+			Node dsNode = BuildNode(clientHostName);
 
 			System.out.println("Initializing Server with UID: " + dsNode.UID);
 
@@ -64,14 +64,12 @@ public class InvokeMain {
 
 	}
 
-	public static Node BuildNode(int hostNumIndex) {
+	public static Node BuildNode(String clientHostName) {
 		Node dsNode = new Node();
 		try {
 			dsNode = ParseConfigFile.read(
-					"C:\\Users\\kiran\\OneDrive - The University of Texas at Dallas\\"
-							+ "CS 6378 ( Advanced Operating Systems )\\Projects\\"
-							+ "Tree Based Quorum\\Server\\src\\readFile.txt",
-							InetAddress.getLocalHost().getHostName(), hostNumIndex);
+					"/home/010/c/cx/cxs172130/TreeBasedQuorum/Server/src/readFile.txt",
+							InetAddress.getLocalHost().getHostName());
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get nodeList", e);
 		}
