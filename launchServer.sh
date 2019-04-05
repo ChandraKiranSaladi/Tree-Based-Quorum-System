@@ -18,7 +18,7 @@ PROG=InvokeMain
 n=0
 
 # Deletes the lines that start with # and the lines that start and end with whitespace
-# opens a new terminal for every dc machine line mentioned in the configAOS.txt
+# opens a new terminal for every dc machine line mentioned in the configServer.txt
 cat $CONFIGLOCAL | sed -e "s/#.*//" | sed -e "/^\s*$/d" |
 (
     read i

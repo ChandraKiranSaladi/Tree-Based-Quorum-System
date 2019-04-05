@@ -14,6 +14,26 @@ Implementation of a Tree-Based Quorum.
 * MultiThreading and Socket Programming
 * Basic Data Structures and Protocol understanding
 
+## Performance Statistics:
+
+Time b/w Client exiting CS and issuing new request | Time Spent in CS | Time taken to enter CS after requesting ( Latency ) | Deadlock
+--- | --- | --- | ---
+500 to 1000ms | 350ms | 792.82 | No
+500 to 1000ms | 300ms | 581.03 | No
+500 to 1000ms | 200ms | 347.44 | No
+300 to 500ms | 200ms | 506.7 | No
+200 to 300ms | 200ms | 584.67 | No
+200 to 300ms | 2ms | 87.76 | No
+100 to 200ms | 200ms | N/A | Yes
+100 to 200ms | 2ms | N/A | Yes
+50 to 100ms | 200ms | N/A | Yes
+5 to 10ms | 200ms | N/A | Yes
+5 to 10ms | 3ms | N/A | Yes
+
+Provided that time between successive requests is sufficiently large so that no deadlock occurs and maintained a constant, time spent in CS is directly proportional to latency.
+
+Provided that Time spent in CS is constant, Time between succesive requests is inversely proportional to Latency, if successive request time is large enough so that no deadlock occurs. 
+
 ## **Description**:
 
 ####  Requirements
